@@ -1,5 +1,7 @@
 package com.uleowz.crudspring.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +16,7 @@ public class Course {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) // avisando ao jakarta que os IDs serão gerados em ordem sequencial(1, 2, [...]).
+    @JsonProperty("_id") // muda o nome na hora de transformar de objeto java para JSON.
     private Long id;
 
     @Column(length = 200, nullable = false) // Se tao tiver essa anotacão, o DB vai gerar o String com maior capacidade de caracteres possiveis.
