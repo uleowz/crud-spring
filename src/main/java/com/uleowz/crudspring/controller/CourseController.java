@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -38,7 +39,7 @@ public class CourseController {
     @GetMapping("/{id}")    
     public ResponseEntity<Course> findById(@PathVariable Long id){
         return courseRepository.findById(id)
-        .map(record -> ResponseEntity.ok().body(record))
+        .map(recordFound -> ResponseEntity.ok().body(recordFound))
         .orElse(ResponseEntity.notFound().build());
     }
 
@@ -49,6 +50,19 @@ public class CourseController {
         // System.out.println(course.getName());
         return courseRepository.save(course);
         // return ResponseEntity.status(HttpStatus.CREATED).body(courseRepository.save(course));
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody Course course){
+        
+        return courseRepository.findById(id).map(recordFound -> {
+            recordFound.setName(course.getName());
+            recordFound.setCategory(course.getCategory());
+            Course updated = courseRepository.save(recordFound); // JPA/Hibernate sabe que já tem ID, então internamente acontece um update ao invés de insert.
+            return ResponseEntity.ok().body(updated);
+
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     
