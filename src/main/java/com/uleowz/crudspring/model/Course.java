@@ -1,5 +1,7 @@
 package com.uleowz.crudspring.model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,6 +19,8 @@ import lombok.Data;
 @Data // equivale ao getter, setter, constructor(com todos os atributos), ToString, Equals e HashCode.
 @Entity // significa que estamos especificando essa classe como uma entidade que vai fazer mapeamento com o DB.
 // @Table(name = "cursos") // mudando o nome da tabela, que por padrão seria "Course"
+@SQLDelete(sql = "UPDATE Course SET status = 'Inativo' WHERE id = ?")
+@Where(clause = "status = 'Ativo'")
 public class Course {
     
     @Id
@@ -40,4 +44,11 @@ public class Course {
     @Length(max = 10)
     @Column(length = 20, nullable = false)
     private String category;
+
+
+    @NotNull
+    @Pattern(regexp = "Ativo|Inativo")
+    @Length(max = 10)
+    @Column(length = 10, nullable = false)
+    private String status = "Ativo";
 }
